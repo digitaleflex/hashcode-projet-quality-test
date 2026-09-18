@@ -1,0 +1,39 @@
+name: Bug report
+description: Signaler un comportement incorrect et reproductible.
+title: "[BUG] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Résumé
+      description: Décrivez clairement le problème.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Donnez les étapes minimales permettant de reproduire le problème.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportement observé
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environnement
+      description: OS, Node, version du package, package manager, framework et configuration pertinente.
+    validations:
+      required: true
