@@ -1,0 +1,29 @@
+name: Feature request
+description: Proposer une amélioration avec un besoin clairement identifié.
+title: "[FEAT] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problème ou besoin
+      description: Quel problème utilisateur ou développeur cette fonctionnalité résout-elle ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+      description: Décrivez le comportement proposé et les critères d'acceptation.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considérées
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact et risques
+      description: Compatibilité CLI/API, complexité, sécurité, performance et maintenance.
