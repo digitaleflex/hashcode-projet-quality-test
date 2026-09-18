@@ -1,0 +1,1 @@
+# hashcode-projet-quality-test
