@@ -1,84 +1,128 @@
-# HashCode Quality — Package npm/pnpm et CLI
+# npm / pnpm / CLI Distribution
 
-## Objectif
+## Package
 
-Le framework est distribuable comme package npm et directement exécutable avec npm ou pnpm. Le dépôt reste la source de référence des prompts, profils et règles ; le package fournit l'interface d'exécution.
+- Name: `hashcode-quality`
+- Current repository version: `2.0.0`
+- Runtime: Node.js `>=20`
+- CLI binary: `hashcode-quality`
+- Module export: `./src/index.mjs`
+- License: MIT
 
-## Utilisation sans installation
+## Zero-install usage
 
 ```bash
 npx hashcode-quality init
-npx hashcode-quality audit
 npx hashcode-quality doctor
+npx hashcode-quality audit
 npx hashcode-quality check --profile standard
 ```
 
-Avec pnpm :
+With pnpm:
 
 ```bash
 pnpm dlx hashcode-quality init
-pnpm dlx hashcode-quality audit
 pnpm dlx hashcode-quality doctor
+pnpm dlx hashcode-quality audit
 pnpm dlx hashcode-quality check --profile standard
 ```
 
-## Installation dans un projet
+## Local installation
 
 ```bash
 npm install --save-dev hashcode-quality
 ```
 
-ou :
-
 ```bash
 pnpm add -D hashcode-quality
 ```
 
-Puis :
+Then use:
 
 ```bash
 npx hashcode-quality audit
-npx hashcode-quality check --profile production
 ```
 
-## Commandes
+## CLI contract
 
-| Commande | Rôle |
-|---|---|
-| `init` | crée une configuration locale minimale |
-| `doctor` | détecte la stack et les outils disponibles |
-| `audit` | produit une reconnaissance et une sélection de contrôles |
-| `check` | exécute les scripts de qualité présents dans le projet |
-| `prompt` | affiche un master prompt distribué avec le package |
+### `init`
 
-## Profils
+Creates a starter `quality.yaml` if one does not already exist. It does not overwrite an existing configuration.
 
-- `minimal` : feedback rapide pendant le développement
-- `standard` : contrôle quotidien/PR
-- `production` : contrôle renforcé avant mise en production
-- `ai` : contrôles logiciels + qualité/sécurité des systèmes IA
+### `doctor`
 
-## Principe d'installation
+Reports the detected stack and the availability of relevant command-line tools.
 
-Le package ne doit pas embarquer toutes les dépendances de chaque écosystème. Il détecte la stack et recommande les outils appropriés. Cela évite d'installer Playwright, Prisma, Python tooling, Trivy ou d'autres outils lorsqu'ils ne sont pas pertinents.
+### `audit`
 
-Les outils externes restent installables au niveau du projet ou de l'environnement CI. Le CLI doit distinguer :
+Maps the detected stack to recommended quality controls. Recommendations are advisory; the command does not claim that a tool was executed.
 
-- outil disponible ;
-- outil absent ;
-- contrôle non applicable ;
-- contrôle non vérifié.
+### `check`
 
-## Publication
+Runs quality scripts exposed by the target project's `package.json` when they exist. Profiles currently define the intended depth of checking; unavailable scripts are not silently reported as successful.
 
-Avant publication publique :
+Supported profiles:
 
-1. vérifier le nom disponible sur npm ;
-2. générer et committer un lockfile de développement ;
-3. exécuter `npm pack --dry-run` ;
-4. tester le package dans un projet vierge avec `npx` et `pnpm dlx` ;
-5. vérifier que seuls `src`, `prompts`, `config`, `docs` et les métadonnées nécessaires sont publiés ;
-6. publier une version semver ;
-7. tester l'installation depuis le registre réel.
+- `minimal`
+- `standard`
+- `production`
+- `ai`
 
-Le dépôt ne prétend pas avoir publié le package tant que cette étape n'a pas été exécutée sur le registre npm.
+### `prompt`
+
+Prints a bundled quality-engineering prompt for use with an AI coding agent.
+
+### `--json`
+
+Supported commands can return machine-readable JSON for CI or automation.
+
+## Package design rule
+
+HashCode Quality is a coordinator and quality-engineering layer, not a bundle containing the entire JavaScript/Python/security ecosystem. External tools are selected according to stack and risk.
+
+This keeps installation smaller, avoids redundant dependencies and lets projects retain control over their own tool versions.
+
+## Release checklist
+
+Before publishing a version:
+
+```bash
+npm pkg get name version bin exports files engines license
+node --check src/index.mjs
+node --check src/cli.mjs
+npm pack --dry-run
+```
+
+Test the generated tarball in a clean directory before publication.
+
+For npm publication, the version must not already exist for the same package name. Published name/version combinations are immutable in the registry.
+
+The repository includes `.github/workflows/publish-npm.yml`, which publishes on a `vX.Y.Z` tag after verifying that the Git tag matches `package.json`. The workflow uses npm provenance and public access.
+
+## First release procedure
+
+1. Verify the package name on npm.
+2. Verify the maintainer's npm account and publishing permissions.
+3. Configure npm trusted publishing for this GitHub repository/workflow as required by npm.
+4. Ensure `package.json` version matches the intended release tag.
+5. Run the package checks locally.
+6. Create and push the tag:
+
+```bash
+git tag v2.0.0
+git push origin v2.0.0
+```
+
+7. Wait for the GitHub Actions publication workflow.
+8. Verify installation from the public registry:
+
+```bash
+npx hashcode-quality --help
+pnpm dlx hashcode-quality audit
+```
+
+9. Verify the npm package metadata and provenance information.
+
+## What is deliberately not claimed
+
+A repository commit that prepares a package for npm does not mean the package has been published. Publication is complete only after the registry contains the package and an external install succeeds.
