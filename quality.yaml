@@ -1,0 +1,160 @@
+version: 2
+name: hashcode-universal-quality
+
+# The framework is selected by risk + detected stack. Projects may override defaults.
+modes:
+  FAST:
+    - reconnaissance
+    - lint
+    - typecheck
+    - targeted_unit
+    - dependency_hygiene
+    - secrets
+  STANDARD:
+    - reconnaissance
+    - official_docs
+    - lint
+    - typecheck
+    - unit
+    - integration
+    - dependency_hygiene
+    - architecture
+    - secrets
+    - sast
+    - issue_intelligence
+  DEEP:
+    - all_standard
+    - contract
+    - property
+    - mutation
+    - state_machine
+    - idempotency
+    - concurrency
+    - fuzz
+    - time_boundaries
+    - migration_integrity
+    - resilience
+  PRODUCTION:
+    - all_standard
+    - e2e
+    - vulnerability_scan
+    - sbom
+    - performance
+    - accessibility
+    - dast_authorized
+    - observability
+    - rollback_recovery
+    - supply_chain
+  AI:
+    - all_production_applicable
+    - llm_evaluation
+    - prompt_injection_tests
+    - tool_authorization_tests
+    - data_leakage_tests
+    - grounding_tests
+    - output_schema_tests
+    - model_prompt_regression
+    - cost_latency_tracking
+
+profiles:
+  minimal:
+    - lint
+    - typecheck
+    - unit
+    - dependency_hygiene
+  standard:
+    - lint
+    - typecheck
+    - unit
+    - integration
+    - dependency_hygiene
+    - architecture
+    - secrets
+    - sast
+  production:
+    - lint
+    - typecheck
+    - unit
+    - integration
+    - e2e
+    - dependency_hygiene
+    - architecture
+    - duplication
+    - secrets
+    - sast
+    - vulnerability_scan
+    - sbom
+    - performance
+    - accessibility
+    - dast
+  ai:
+    extends: production
+    adds:
+      - llm_evaluation
+      - prompt_injection_tests
+      - tool_authorization_tests
+      - data_leakage_tests
+      - model_regression_tests
+      - cost_latency_tracking
+
+policies:
+  issue_language: fr
+  require_evidence_for_confirmed: true
+  require_regression_test_for_confirmed_bug: true
+  no_test_result_without_execution: true
+  no_auto_delete_from_static_signal: true
+  deduplicate_findings: true
+  fail_on:
+    - exposed_secret
+    - critical_vulnerability
+    - failing_required_test
+    - typecheck_failure
+    - build_failure
+    - confirmed_critical_authorization_bypass
+    - invalid_required_migration
+  advisory:
+    - unused_file
+    - unused_export
+    - unused_dependency
+    - duplication
+    - dead_css
+    - performance_regression
+    - stylistic_warning
+    - technical_debt
+  never_auto_delete:
+    - source_file
+    - dependency
+    - export
+    - css_selector
+    - database_data
+
+issue_schema:
+  required:
+    - type
+    - title
+    - summary
+    - location
+    - evidence
+    - root_cause
+    - consequence
+    - impact
+    - severity
+    - confidence
+    - recommended_solution
+    - regression_tests
+    - acceptance_criteria
+    - verification
+    - residual_risk
+
+report:
+  required_sections:
+    - executive_summary
+    - project_model
+    - risk_matrix
+    - findings
+    - evidence
+    - false_positive_risk
+    - remediation
+    - regression_tests
+    - release_readiness
+    - residual_risk

@@ -1,0 +1,36 @@
+{
+  "name": "@hashcode/universal-quality-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Universal, risk-based quality engineering toolkit for software and AI projects.",
+  "packageManager": "pnpm@10",
+  "scripts": {
+    "quality": "pnpm quality:static && pnpm quality:deps && pnpm quality:test",
+    "quality:static": "pnpm lint && pnpm typecheck",
+    "quality:deps": "knip --include files,exports,types,dependencies,devDependencies,unlisted,binaries",
+    "quality:test": "vitest run",
+    "quality:e2e": "playwright test",
+    "quality:security": "pnpm security:secrets && pnpm security:semgrep",
+    "security:secrets": "gitleaks detect --no-banner",
+    "security:semgrep": "semgrep scan --config auto",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "architecture": "dependency-cruiser --validate .dependency-cruiser.cjs src test tests",
+    "duplicates": "jscpd . --ignore '**/node_modules/**,**/dist/**,**/coverage/**'",
+    "dead-css": "purgecss --css '**/*.css' --content '**/*.{html,js,jsx,ts,tsx,vue,svelte,astro}' --output .quality/purgecss"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "dependency-cruiser": "latest",
+    "eslint": "latest",
+    "jscpd": "latest",
+    "knip": "latest",
+    "prettier": "latest",
+    "purgecss": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}
