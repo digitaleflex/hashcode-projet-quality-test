@@ -1,4 +1,4 @@
-name: Universal Quality
+name: Package Quality
 
 on:
   pull_request:
@@ -9,49 +9,46 @@ permissions:
   contents: read
 
 jobs:
-  quality:
+  package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: 20
+          cache: npm
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Validate package metadata
+        run: npm pkg get name version bin exports files engines license
+
+      - name: Syntax check
+        run: |
+          node --check src/index.mjs
+          node --check src/cli.mjs
+
+      - name: CLI smoke test
+        run: |
+          node src/cli.mjs --help
+          node src/cli.mjs doctor --json
+          node src/cli.mjs audit --json
+
+      - name: Package dry run
+        run: npm pack --dry-run
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          version: 10
-          run_install: false
-
-      - name: Install
-        run: pnpm install --frozen-lockfile=false
-
-      - name: Lint
-        run: pnpm lint
-        continue-on-error: true
-
-      - name: Typecheck
-        run: pnpm typecheck
-        continue-on-error: true
-
-      - name: Dependency and dead-code audit
-        run: pnpm quality:deps
-
-      - name: Unit tests
-        run: pnpm quality:test
-        continue-on-error: true
+          fetch-depth: 0
 
       - name: Gitleaks
         uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
-
-      - name: Semgrep
-        uses: semgrep/semgrep-action@v1
-        continue-on-error: true
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
