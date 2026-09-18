@@ -3,11 +3,46 @@
   "version": "2.0.0",
   "description": "Universal, risk-based quality engineering CLI for software and AI projects.",
   "type": "module",
-  "bin": {"hashcode-quality": "./src/cli.mjs"},
-  "exports": {".": "./src/index.mjs"},
-  "files": ["src", "prompts", "config", "docs", "quality.yaml", "README.md", "LICENSE"],
-  "engines": {"node": ">=20"},
+  "bin": {
+    "hashcode-quality": "./src/cli.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "src",
+    "prompts",
+    "config",
+    "docs",
+    "quality.yaml",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "packageManager": "pnpm@10",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitaleflex/hashcode-projet-quality-test.git"
+  },
+  "homepage": "https://github.com/digitaleflex/hashcode-projet-quality-test#readme",
+  "bugs": {
+    "url": "https://github.com/digitaleflex/hashcode-projet-quality-test/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "quality-engineering",
+    "software-quality",
+    "testing",
+    "code-quality",
+    "security",
+    "ai",
+    "llm",
+    "developer-tools",
+    "cli",
+    "devtools"
+  ],
   "scripts": {
     "quality": "node ./src/cli.mjs check --profile standard",
     "quality:fast": "node ./src/cli.mjs check --profile minimal",
@@ -19,6 +54,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "devDependencies": {"prettier": "latest"},
-  "publishConfig": {"access": "public"}
+  "devDependencies": {
+    "prettier": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
