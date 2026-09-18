@@ -1,16 +1,52 @@
-# HashCode Project Quality Test
+# HashCode Quality
 
-## Universal Quality Engineering Framework v2.0
+[![Open Source](https://img.shields.io/badge/open--source-MIT-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/hashcode-quality.svg)](https://www.npmjs.com/package/hashcode-quality)
 
-Reusable, risk-based quality engineering for software and AI-assisted projects. The framework is project-agnostic: web, mobile, backend, APIs, CLI, data, AI/LLM, infrastructure and hybrid systems.
+**Universal, risk-based quality engineering CLI for software and AI projects.**
 
-## Core philosophy
+HashCode Quality helps developers and AI coding agents inspect a project, understand its stack, select proportionate quality controls and produce evidence-based quality decisions.
 
 > **Tooling finds signals. Tests prove behavior. Engineering analysis finds causes. Issues make correction actionable. The final gate requires evidence.**
 
-The framework optimizes for code that does exactly what it was created to do, does it correctly, securely and efficiently, and does not accumulate unjustified complexity.
+## Quick start
 
-## Quality pipeline
+No global installation is required:
+
+```bash
+npx hashcode-quality init
+npx hashcode-quality doctor
+npx hashcode-quality audit
+npx hashcode-quality check --profile standard
+```
+
+With pnpm:
+
+```bash
+pnpm dlx hashcode-quality init
+pnpm dlx hashcode-quality audit
+pnpm dlx hashcode-quality check --profile standard
+```
+
+For a project-local installation:
+
+```bash
+npm install --save-dev hashcode-quality
+```
+
+or:
+
+```bash
+pnpm add -D hashcode-quality
+```
+
+> The package is designed for Node.js 20+.
+
+## What it does
+
+HashCode Quality is deliberately **stack-aware and risk-based**. It does not force every project to install or execute every quality tool.
+
+The intended pipeline is:
 
 ```text
 Intent
@@ -46,15 +82,26 @@ Regression verification
 Final quality gate
 ```
 
-## Operating modes
+## CLI
 
-| Mode | Use |
+| Command | Purpose |
 |---|---|
-| FAST | Fast feedback on a small change |
-| STANDARD | Normal feature/bug workflow |
-| DEEP | Advanced architecture and failure-mode analysis |
-| PRODUCTION | Release-critical systems |
-| AI | LLM/agent-specific evaluation |
+| `init` | Creates a starter `quality.yaml` |
+| `doctor` | Detects the project stack and available tools |
+| `audit` | Recommends quality controls for the detected stack |
+| `check` | Runs the project's available quality scripts |
+| `prompt` | Prints a bundled HashCode quality-engineering prompt |
+
+Machine-readable output is available with `--json` for supported commands.
+
+## Profiles
+
+- **minimal** — fast feedback for small changes;
+- **standard** — normal development workflow;
+- **production** — release-oriented quality controls;
+- **ai** — production controls plus AI/agent evaluation concerns.
+
+The profiles are documented in `quality.yaml` and the architecture documentation.
 
 ## Quality dimensions
 
@@ -71,82 +118,50 @@ Final quality gate
 11. AI quality
 12. Anti-surengineering
 
-## Master prompts
+## Tooling strategy
 
-| Prompt | Purpose |
-|---|---|
-| `00-master-orchestrator.md` | Orchestrates the complete quality lifecycle |
-| `01-discovery-and-requirements.md` | Discovery and requirements |
-| `02-bdd-atdd.md` | Acceptance and behavior specifications |
-| `03-tdd-implementation.md` | Test-first implementation |
-| `04-test-strategy.md` | Risk-based test strategy |
-| `05-security-review.md` | Security review |
-| `06-code-audit.md` | Evidence-based code audit |
-| `07-release-readiness.md` | Release readiness |
-| `08-ai-project-evaluation.md` | AI/LLM evaluation |
-| `09-bug-to-regression.md` | Bug → regression test |
-| `10-pr-review.md` | Pull request review |
-| `11-universal-project-audit.md` | Full repository audit |
-| `12-official-documentation-research.md` | Version-aware official documentation research |
-| `13-minimal-correct-implementation.md` | Minimal correct implementation |
-| `14-test-intelligence.md` | Advanced risk-based testing |
-| `15-domain-invariant-and-state-machine.md` | Business invariants and lifecycle testing |
-| `16-resilience-concurrency-idempotency.md` | Reliability, concurrency and idempotency |
-| `17-security-abuse-and-supply-chain.md` | Security abuse and supply-chain analysis |
-| `18-ai-agent-evaluation.md` | AI/agent quality, safety and regression |
-| `19-anti-surengineering.md` | Detect unjustified complexity |
-| `20-issue-intelligence.md` | Convert verified findings into detailed French Issues |
-| `21-final-quality-gate.md` | Evidence-based completion gate |
-| `22-autonomous-remediation.md` | Safe autonomous remediation when authorized |
+Typical integrations include Knip, ESLint, TypeScript, Vitest, Playwright, dependency-cruiser, jscpd, Gitleaks, Semgrep, Trivy, Syft, Checkov, axe and Lighthouse CI when the stack and risk justify them.
 
-## Issue standard
+HashCode Quality does **not** treat an individual static-analysis finding as an automatic defect. Findings must be contextualized, corroborated and made actionable. Unused code, duplication and dead CSS are advisory by default.
 
-Every actionable finding is written in **French** and must identify:
+## AI projects
 
-- localisation exacte ;
-- preuve ;
-- cause racine ;
-- conséquence technique ;
-- impact utilisateur/métier/sécurité/données/performance/disponibilité/coût/maintenance ;
-- gravité et niveau de confiance ;
-- solution recommandée ;
-- alternatives ;
-- risques de correction ;
-- tests de non-régression ;
-- critères d'acceptation ;
-- vérification finale ;
-- risque résiduel.
+The framework also covers AI/LLM and agentic systems:
 
-A tool finding is not automatically an Issue. It must be contextualized, corroborated and actionable.
-
-## Stack-aware tooling
-
-The framework uses a `tool-per-risk` strategy rather than installing every tool everywhere. Typical profiles include:
-
-- **Next.js / React / TypeScript:** ESLint, TypeScript, Knip, Vitest, Playwright, dependency-cruiser, jscpd, Gitleaks, Semgrep, Trivy, axe and Lighthouse CI when relevant.
-- **Tailwind CSS:** framework-native/static analysis plus safe CSS auditing; dynamic classes must be handled explicitly.
-- **Prisma / PostgreSQL:** schema/migration validation, integration tests against PostgreSQL, transaction/concurrency checks and query/index analysis for critical paths.
-- **Python:** Ruff, Pyright or mypy, pytest, Bandit/Semgrep and OSV/Trivy as applicable.
-- **Containers/IaC:** Trivy, Syft, Checkov and Dockerfile-specific checks when relevant.
-- **APIs:** OpenAPI validation, contract testing, negative/property/fuzz testing and authorized DAST when appropriate.
-- **AI/LLM:** golden datasets, prompt/model regression, prompt-injection, tool authorization, data-leakage, grounding, output-schema, latency and cost evaluation.
-
-## CI policy
-
-Blocking controls should be limited to reliable, meaningful signals such as confirmed exposed secrets, critical vulnerabilities, required test failures, broken builds or confirmed critical authorization failures. Unused code, duplication, dead CSS and similar signals begin as advisory unless project-specific evidence justifies a gate.
-
-## Anti-surengineering rule
-
-Do not create an issue because code could be stylistically cleaner. Complexity becomes a quality finding when evidence shows unnecessary cost, risk, duplication, coupling or maintenance burden, or when it violates an explicit architectural/domain constraint.
+- golden datasets;
+- prompt/model regression;
+- grounding and factuality evaluation;
+- prompt-injection tests;
+- tool authorization and dangerous-action tests;
+- data-leakage checks;
+- structured-output validation;
+- cost and latency regression;
+- model/provider compatibility;
+- agent workflow regression.
 
 ## Documentation
 
-- `docs/UNIVERSAL-QUALITY-ARCHITECTURE.md` — framework architecture
-- `docs/OPEN-SOURCE-TOOLCHAIN.md` — toolchain and profiles
-- `docs/TOOLING-DEEP-RESEARCH.md` — tool selection rationale
+- `docs/UNIVERSAL-QUALITY-ARCHITECTURE.md` — architecture of the framework
+- `docs/OPEN-SOURCE-TOOLCHAIN.md` — open-source toolchain
+- `docs/OPEN-SOURCE-REPOSITORY-STANDARDS.md` — public repository standards
+- `docs/NPM-PNPM-CLI.md` — npm/pnpm package and CLI guide
 - `docs/ISSUE-QUALITY-SPECIFICATION.md` — Issue contract
-- `quality.yaml` — quality profiles and blocking policy
+- `quality.yaml` — quality profiles and policies
+- `prompts/` — reusable AI engineering prompts
+- `CHANGELOG.md` — release history
 
-## Principle
+## Contributing
 
-**Correct + Simple + Testable + Secure + Maintainable + Observable + Performant + Proportionate.**
+Read `CONTRIBUTING.md` before opening a Pull Request. Bug reports and feature requests use the GitHub Issue templates.
+
+## Security
+
+Do not publish credentials, tokens, private keys or sensitive data. For security vulnerabilities, follow `SECURITY.md` rather than opening a public Issue.
+
+## License
+
+HashCode Quality is released under the MIT License. See `LICENSE`.
+
+## Status
+
+The npm package and CLI are the public foundation of the HashCode Quality project. The broader multi-tool quality engine is being developed incrementally in the 2.x series.
